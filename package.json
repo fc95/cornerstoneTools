@@ -1,6 +1,6 @@
 {
   "name": "cornerstone-tools",
-  "version": "0.0.0",
+  "version": "3.9.0",
   "description": "Medical imaging tools for the Cornerstone library",
   "main": "./dist/cornerstoneTools.js",
   "module": "./dist/cornerstoneTools.js",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fc95/cornerstoneTools.git"
+    "url": "https://github.com/cornerstonejs/cornerstoneTools.git"
   },
   "engines": {
     "node": ">=8.16.0"

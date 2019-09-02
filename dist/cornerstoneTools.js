@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 3.0.1 - 2019-08-14 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
+/*! cornerstone-tools - 3.0.1 - 2019-09-02 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	}
 /******/
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1ed9b2e50ea307cd4bf9"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "94bd35021239e464555c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -3313,16 +3313,21 @@ __webpack_require__.r(__webpack_exports__);
  * @param {number} lineWidth - The line width of the link.
  * @param {number} xOffset - The x offset of the textbox.
  * @param {boolean} yCenter - Vertically centers the text if true.
+ * @param {number} yOffset - The y offset of the textbox.
  * @returns {undefined}
  */
 
-/* harmony default export */ __webpack_exports__["default"] = (function (context, element, textBox, text, handles, textBoxAnchorPoints, color, lineWidth, xOffset, yCenter) {
+/* harmony default export */ __webpack_exports__["default"] = (function (context, element, textBox, text, handles, textBoxAnchorPoints, color, lineWidth, xOffset, yCenter, yOffset) {
   var cornerstone = _externalModules_js__WEBPACK_IMPORTED_MODULE_0__["default"].cornerstone; // Convert the textbox Image coordinates into Canvas coordinates
 
   var textCoords = cornerstone.pixelToCanvas(element, textBox);
 
   if (xOffset) {
     textCoords.x += xOffset;
+  }
+
+  if (yOffset) {
+    textCoords.y += yOffset;
   }
 
   var options = {
@@ -22280,10 +22285,25 @@ function (_BaseAnnotationTool) {
             CHISON_SONOAI: data.CHISON_SONOAI,
             CHISON_SONOAI_AREA: data.CHISON_SONOAI_AREA
           };
+          var chisonSonoAIRisk = {
+            CHISON_SONOAI: data.CHISON_SONOAI,
+            CHISON_SONOAI_AREA: data.CHISON_SONOAI_AREA_RISK
+          }; // eslint-disable-next-line no-console
+          // console.log('CHISON_SONOAI_AREA_NEW==', data.CHISON_SONOAI_AREA);
+          // eslint-disable-next-line no-console
+          // console.log('CHISON_SONOAI_AREA_RISK==', data.CHISON_SONOAI_AREA_RISK);
+          // eslint-disable-next-line no-console
+          // console.log('color==', color);
 
           var textBoxContent = _createTextBoxContent(context, image.color, data.cachedStats, modality, hasPixelSpacing, _this.configuration, chisonSonoAI);
 
+          var textBoxContentRisk = _createTextBoxContent(context, image.color, data.cachedStats, modality, hasPixelSpacing, _this.configuration, chisonSonoAIRisk);
+
           Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContent, data.handles, textBoxAnchorPoints, color, lineWidth, 0, true);
+
+          if (data.CHISON_SONOAI) {
+            Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk, data.handles, textBoxAnchorPoints, '#00FF00', lineWidth, 0, false, 15);
+          }
         }
       });
     }

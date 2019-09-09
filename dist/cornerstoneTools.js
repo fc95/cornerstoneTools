@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 3.0.1 - 2019-09-02 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
+/*! cornerstone-tools - 3.0.1 - 2019-09-09 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	}
 /******/
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "94bd35021239e464555c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4bfc43a0e17171b22612"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -22285,9 +22285,13 @@ function (_BaseAnnotationTool) {
             CHISON_SONOAI: data.CHISON_SONOAI,
             CHISON_SONOAI_AREA: data.CHISON_SONOAI_AREA
           };
-          var chisonSonoAIRisk = {
+          var chisonSonoAIRisk_1 = {
             CHISON_SONOAI: data.CHISON_SONOAI,
-            CHISON_SONOAI_AREA: data.CHISON_SONOAI_AREA_RISK
+            CHISON_SONOAI_AREA: data.CHISON_SONOAI_AREA_RISK_1
+          };
+          var chisonSonoAIRisk_2 = {
+            CHISON_SONOAI: data.CHISON_SONOAI,
+            CHISON_SONOAI_AREA: data.CHISON_SONOAI_AREA_RISK_2
           }; // eslint-disable-next-line no-console
           // console.log('CHISON_SONOAI_AREA_NEW==', data.CHISON_SONOAI_AREA);
           // eslint-disable-next-line no-console
@@ -22297,12 +22301,19 @@ function (_BaseAnnotationTool) {
 
           var textBoxContent = _createTextBoxContent(context, image.color, data.cachedStats, modality, hasPixelSpacing, _this.configuration, chisonSonoAI);
 
-          var textBoxContentRisk = _createTextBoxContent(context, image.color, data.cachedStats, modality, hasPixelSpacing, _this.configuration, chisonSonoAIRisk);
+          var textBoxContentRisk_1 = _createTextBoxContent(context, image.color, data.cachedStats, modality, hasPixelSpacing, _this.configuration, chisonSonoAIRisk_1);
 
-          Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContent, data.handles, textBoxAnchorPoints, color, lineWidth, 0, true);
+          var textBoxContentRisk_2 = _createTextBoxContent(context, image.color, data.cachedStats, modality, hasPixelSpacing, _this.configuration, chisonSonoAIRisk_2);
+
+          Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContent, data.handles, textBoxAnchorPoints, color, lineWidth, 0, true); // 风险提示_第一行
 
           if (data.CHISON_SONOAI) {
-            Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk, data.handles, textBoxAnchorPoints, '#00FF00', lineWidth, 0, false, 15);
+            Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk_1, data.handles, textBoxAnchorPoints, '#00FF00', lineWidth, 0, false, 15);
+          } // 风险提示_第二行
+
+
+          if (data.CHISON_SONOAI) {
+            Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk_2, data.handles, textBoxAnchorPoints, '#00FF00', lineWidth, 0, false, 35);
           }
         }
       });

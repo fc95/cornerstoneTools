@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 3.0.1 - 2019-09-09 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
+/*! cornerstone-tools - 3.0.1 - 2019-10-16 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	}
 /******/
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4bfc43a0e17171b22612"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e728a0d7f6ad9e657529"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -16901,7 +16901,8 @@ function (_BaseTool) {
       supportedInteractionTypes: ['Mouse', 'Touch'],
       configuration: {
         loop: false,
-        allowSkipping: true
+        allowSkipping: true,
+        horizontal: false
       },
       svgCursor: _cursors_index_js__WEBPACK_IMPORTED_MODULE_10__["stackScrollCursor"]
     };
@@ -16919,26 +16920,48 @@ function (_BaseTool) {
           deltaPoints = eventData.deltaPoints;
       var _this$configuration = this.configuration,
           loop = _this$configuration.loop,
-          allowSkipping = _this$configuration.allowSkipping;
+          allowSkipping = _this$configuration.allowSkipping,
+          horizontal = _this$configuration.horizontal;
       var options = Object(_toolOptions_js__WEBPACK_IMPORTED_MODULE_9__["getToolOptions"])(this.name, element);
 
       var pixelsPerImage = this._getPixelPerImage(element);
-
-      var deltaY = this._getDeltaY(element, deltaPoints.page.y);
 
       if (!pixelsPerImage) {
         return;
       }
 
-      if (Math.abs(deltaY) >= pixelsPerImage) {
-        var imageIdIndexOffset = Math.round(deltaY / pixelsPerImage);
-        Object(_util_scroll_js__WEBPACK_IMPORTED_MODULE_7__["default"])(element, imageIdIndexOffset, loop, allowSkipping);
-        options.deltaY = deltaY % pixelsPerImage;
+      if (horizontal) {
+        // 水平方向
+        var deltaX = this._getDeltaX(element, deltaPoints.page.x);
+
+        if (Math.abs(deltaX) >= pixelsPerImage) {
+          var imageIdIndexOffset = Math.round(deltaX / pixelsPerImage);
+          Object(_util_scroll_js__WEBPACK_IMPORTED_MODULE_7__["default"])(element, -imageIdIndexOffset, loop, allowSkipping);
+          options.deltaX = deltaX % pixelsPerImage;
+        } else {
+          options.deltaX = deltaX;
+        }
       } else {
-        options.deltaY = deltaY;
+        var deltaY = this._getDeltaY(element, deltaPoints.page.y);
+
+        if (Math.abs(deltaY) >= pixelsPerImage) {
+          var _imageIdIndexOffset = Math.round(deltaY / pixelsPerImage);
+
+          Object(_util_scroll_js__WEBPACK_IMPORTED_MODULE_7__["default"])(element, _imageIdIndexOffset, loop, allowSkipping);
+          options.deltaY = deltaY % pixelsPerImage;
+        } else {
+          options.deltaY = deltaY;
+        }
       }
 
       Object(_toolOptions_js__WEBPACK_IMPORTED_MODULE_9__["setToolOptions"])(this.name, element, options);
+    }
+  }, {
+    key: "_getDeltaX",
+    value: function _getDeltaX(element, deltaPointsX) {
+      var options = Object(_toolOptions_js__WEBPACK_IMPORTED_MODULE_9__["getToolOptions"])(this.name, element);
+      var deltaX = options.deltaX || 0;
+      return deltaX + deltaPointsX;
     }
   }, {
     key: "_getDeltaY",
@@ -16957,9 +16980,12 @@ function (_BaseTool) {
       }
 
       var stackData = toolData.data[0];
-      var stackScrollSpeed = this.configuration.stackScrollSpeed; // The Math.max here makes it easier to mouseDrag-scroll small or really large image stacks
+      var _this$configuration2 = this.configuration,
+          stackScrollSpeed = _this$configuration2.stackScrollSpeed,
+          horizontal = _this$configuration2.horizontal;
+      var offsetDistance = horizontal ? element.offsetWidth : element.offsetHeight; // The Math.max here makes it easier to mouseDrag-scroll small or really large image stacks
 
-      return stackScrollSpeed || Math.max(2, element.offsetHeight / Math.max(stackData.imageIds.length, 8));
+      return stackScrollSpeed || Math.max(2, offsetDistance / Math.max(stackData.imageIds.length, 8));
     }
   }]);
 
@@ -22308,12 +22334,12 @@ function (_BaseAnnotationTool) {
           Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContent, data.handles, textBoxAnchorPoints, color, lineWidth, 0, true); // 风险提示_第一行
 
           if (data.CHISON_SONOAI) {
-            Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk_1, data.handles, textBoxAnchorPoints, '#00FF00', lineWidth, 0, false, 15);
+            Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk_1, data.handles, textBoxAnchorPoints, '#9CCEF9', lineWidth, 0, false, 15);
           } // 风险提示_第二行
 
 
           if (data.CHISON_SONOAI) {
-            Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk_2, data.handles, textBoxAnchorPoints, '#00FF00', lineWidth, 0, false, 35);
+            Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk_2, data.handles, textBoxAnchorPoints, '#9CCEF9', lineWidth, 0, false, 35);
           }
         }
       });

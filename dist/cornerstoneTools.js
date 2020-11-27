@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 3.0.1 - 2019-10-16 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
+/*! cornerstone-tools - 3.0.1 - 2020-11-04 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	}
 /******/
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e728a0d7f6ad9e657529"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d4bccf86736ce39816f9"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -18882,7 +18882,7 @@ function (_BaseAnnotationTool) {
 
 
 
-var _throttledUpdateCachedStats = Object(_util_throttle_js__WEBPACK_IMPORTED_MODULE_14__["default"])(_updateCachedStats, 110);
+var _throttledUpdateCachedStats = Object(_util_throttle_js__WEBPACK_IMPORTED_MODULE_14__["default"])(_updateCachedStats, 50);
 /**
  *
  *
@@ -19019,8 +19019,8 @@ function _createTextBoxContent(context, isColorImage) {
 
 function _formatArea(area, hasPixelSpacing) {
   // This uses Char code 178 for a superscript 2
-  var suffix = hasPixelSpacing ? " mm".concat(String.fromCharCode(178)) : " px".concat(String.fromCharCode(178));
-  return "Area: ".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_13__["default"])(area.toFixed(2))).concat(suffix);
+  var suffix = hasPixelSpacing ? " mm".concat(String.fromCharCode(178)) : " pixels".concat(String.fromCharCode(178));
+  return "".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_13__["default"])(area.toFixed(2))).concat(suffix);
 }
 /**
  *
@@ -19707,7 +19707,7 @@ function (_BaseAnnotationTool) {
 
 
 
-var _throttledUpdateCachedStats = Object(_util_throttle_js__WEBPACK_IMPORTED_MODULE_14__["default"])(_updateCachedStats, 110);
+var _throttledUpdateCachedStats = Object(_util_throttle_js__WEBPACK_IMPORTED_MODULE_14__["default"])(_updateCachedStats, 50);
 /**
  *
  *
@@ -19844,8 +19844,8 @@ function _createTextBoxContent(context, isColorImage) {
 
 function _formatArea(area, hasPixelSpacing) {
   // This uses Char code 178 for a superscript 2
-  var suffix = hasPixelSpacing ? " mm".concat(String.fromCharCode(178)) : " px".concat(String.fromCharCode(178));
-  return "Area: ".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_13__["default"])(area.toFixed(2))).concat(suffix);
+  var suffix = hasPixelSpacing ? " mm".concat(String.fromCharCode(178)) : " pixels".concat(String.fromCharCode(178));
+  return "".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_13__["default"])(area.toFixed(2))).concat(suffix);
 }
 /**
  *
@@ -20397,7 +20397,7 @@ function (_BaseAnnotationTool) {
           } // Create a line of text to display the area and its units
 
 
-          var areaText = "Area: ".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_17__["default"])(area.toFixed(2))).concat(suffix); // Add this text line to the array to be displayed in the textbox
+          var areaText = "".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_17__["default"])(area.toFixed(2))).concat(suffix); // Add this text line to the array to be displayed in the textbox
 
           textLines.push(areaText);
         }
@@ -20494,6 +20494,16 @@ function (_BaseAnnotationTool) {
       var config = this.configuration;
       var currentTool = config.currentTool;
       var data = toolState.data[currentTool];
+
+      if (!data) {
+        config.currentHandle = 0;
+        config.currentTool = -1;
+
+        this._deactivateDraw(element);
+
+        return;
+      }
+
       var coords = eventData.currentPoints.canvas; // Set the mouseLocation handle
 
       this._getMouseLocation(eventData);
@@ -20525,6 +20535,10 @@ function (_BaseAnnotationTool) {
   }, {
     key: "_drawingMouseDragCallback",
     value: function _drawingMouseDragCallback(evt) {
+      if (!this.options.mouseButtonMask) {
+        return;
+      }
+
       if (!this.options.mouseButtonMask.includes(evt.detail.buttons)) {
         return;
       }
@@ -20551,7 +20565,17 @@ function (_BaseAnnotationTool) {
       var toolState = Object(_stateManagement_toolState_js__WEBPACK_IMPORTED_MODULE_10__["getToolState"])(eventData.element, this.name);
       var config = this.configuration;
       var currentTool = config.currentTool;
-      var data = toolState.data[currentTool]; // Set the mouseLocation handle
+      var data = toolState.data[currentTool];
+
+      if (!data) {
+        config.currentHandle = 0;
+        config.currentTool = -1;
+
+        this._deactivateDraw(eventData.element);
+
+        return;
+      } // Set the mouseLocation handle
+
 
       this._getMouseLocation(eventData);
 
@@ -20608,6 +20632,10 @@ function (_BaseAnnotationTool) {
     key: "_drawingMouseDownCallback",
     value: function _drawingMouseDownCallback(evt) {
       var eventData = evt.detail;
+
+      if (!this.options.mouseButtonMask) {
+        return;
+      }
 
       if (!this.options.mouseButtonMask.includes(eventData.buttons)) {
         return;
@@ -20733,6 +20761,10 @@ function (_BaseAnnotationTool) {
     value: function _editMouseDragCallback(evt) {
       var eventData = evt.detail;
 
+      if (!this.options.mouseButtonMask) {
+        return;
+      }
+
       if (!this.options.mouseButtonMask.includes(eventData.buttons)) {
         return;
       }
@@ -20740,6 +20772,7 @@ function (_BaseAnnotationTool) {
       var toolState = Object(_stateManagement_toolState_js__WEBPACK_IMPORTED_MODULE_10__["getToolState"])(eventData.element, this.name);
       var config = this.configuration;
       var data = toolState.data[config.currentTool];
+      if (data.CHISON_SONOAI) return;
       var currentHandle = config.currentHandle;
       var points = data.handles.points;
       var handleIndex = -1; // Set the mouseLocation handle
@@ -20777,6 +20810,7 @@ function (_BaseAnnotationTool) {
       var toolState = Object(_stateManagement_toolState_js__WEBPACK_IMPORTED_MODULE_10__["getToolState"])(eventData.element, this.name);
       var config = this.configuration;
       var data = toolState.data[config.currentTool];
+      if (data.CHISON_SONOAI) return;
       var currentHandle = config.currentHandle;
       var points = data.handles.points;
       var handleIndex = -1; // Set the mouseLocation handle
@@ -20875,6 +20909,16 @@ function (_BaseAnnotationTool) {
         currentHandleData.y = config.dragOrigin.y;
         previousHandleData.lines[0] = currentHandleData;
         handles.invalidHandlePlacement = false;
+      } else {
+        var image = eventData.image;
+        var columnPixelSpacing = image.columnPixelSpacing || 1;
+        var rowPixelSpacing = image.rowPixelSpacing || 1;
+        var scaling = columnPixelSpacing * rowPixelSpacing;
+        var area = freehandArea(points, scaling);
+
+        if (!isNaN(area)) {
+          toolState.data[currentTool].area = area;
+        }
       }
     }
     /**
@@ -22355,7 +22399,7 @@ function (_BaseAnnotationTool) {
 
 
 
-var _throttledUpdateCachedStats = Object(_util_throttle_js__WEBPACK_IMPORTED_MODULE_13__["default"])(_updateCachedStats, 110);
+var _throttledUpdateCachedStats = Object(_util_throttle_js__WEBPACK_IMPORTED_MODULE_13__["default"])(_updateCachedStats, 50);
 /**
  *
  *
@@ -22534,8 +22578,8 @@ function _formatArea(area, hasPixelSpacing, _ref) {
       CHISON_SONOAI = _ref$CHISON_SONOAI === void 0 ? false : _ref$CHISON_SONOAI,
       CHISON_SONOAI_AREA = _ref.CHISON_SONOAI_AREA;
   // This uses Char code 178 for a superscript 2
-  var suffix = hasPixelSpacing ? " mm".concat(String.fromCharCode(178)) : " px".concat(String.fromCharCode(178));
-  return CHISON_SONOAI ? CHISON_SONOAI_AREA : "Area: ".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_12__["default"])(area.toFixed(2))).concat(suffix);
+  var suffix = hasPixelSpacing ? " mm".concat(String.fromCharCode(178)) : " pixels".concat(String.fromCharCode(178));
+  return CHISON_SONOAI ? CHISON_SONOAI_AREA : "".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_12__["default"])(area.toFixed(2))).concat(suffix);
 }
 /**
  * TODO: This is identical to EllipticalROI's same fn

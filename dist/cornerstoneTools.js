@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 3.0.1 - 2020-11-04 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
+/*! cornerstone-tools - 3.0.1 - 2021-02-24 | (c) 2017 Chris Hafey | https://github.com/cornerstonejs/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	}
 /******/
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d4bccf86736ce39816f9"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "48f16e8669affe83f904"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -7596,6 +7596,37 @@ __webpack_require__.r(__webpack_exports__);
     width: image.width,
     height: image.height
   };
+  var toolName = renderData.toolName;
+
+  if (toolName === 'CircleRoi') {
+    var _handles = handles,
+        _handles$start = _handles.start,
+        start = _handles$start === void 0 ? {} : _handles$start,
+        _handles$end = _handles.end,
+        end = _handles$end === void 0 ? {} : _handles$end;
+    var dx = start.x - end.x;
+    var dy = start.y - end.y;
+    var radius = Math.sqrt(dx * dx + dy * dy);
+    handles = Object.assign({}, handles, {
+      left: {
+        x: start.x - radius,
+        y: start.y
+      },
+      up: {
+        x: start.x,
+        y: start.y - radius
+      },
+      right: {
+        x: start.x + radius,
+        y: start.y
+      },
+      down: {
+        x: start.x,
+        y: start.y + radius
+      }
+    });
+  }
+
   var handleOutsideImage = false;
   Object.keys(handles).forEach(function (name) {
     var handle = handles[name];
@@ -7923,6 +7954,8 @@ var _upOrEndEvents = {
 function _dragHandler(toolName, annotation) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var evt = arguments.length > 3 ? arguments[3] : undefined;
+  // AI诊断框确定后不能在修改
+  if (annotation && annotation.CHISON_SONOAI && !annotation.editable) return;
   var _evt$detail = evt.detail,
       element = _evt$detail.element,
       image = _evt$detail.image;
@@ -7986,6 +8019,8 @@ function _upOrEndHandler(toolName, annotation) {
     element.removeEventListener(eventType, upOrEndHandler);
   }); // If any handle is outside the image, delete the tool data
 
+
+  eventData.toolName = toolName;
 
   if (options.deleteIfHandleOutsideImage && Object(_anyHandlesOutsideImage_js__WEBPACK_IMPORTED_MODULE_2__["default"])(eventData, annotation.handles)) {
     Object(_stateManagement_toolState_js__WEBPACK_IMPORTED_MODULE_3__["removeToolState"])(element, toolName, annotation);
@@ -8105,6 +8140,8 @@ var _upOrEndEvents = {
 });
 
 function _dragHandler(toolName, annotation, handle, options, interactionType, evt) {
+  // AI诊断框确定后不能在修改
+  if (annotation && annotation.CHISON_SONOAI && !annotation.editable) return;
   var _evt$detail = evt.detail,
       image = _evt$detail.image,
       currentPoints = _evt$detail.currentPoints,
@@ -8160,6 +8197,8 @@ function _upOrEndHandler(toolName, evtDetail, annotation, handle) {
     element.removeEventListener(eventType, upOrEndHandler);
   }); // If any handle is outside the image, delete the tool data
 
+
+  evtDetail.toolName = toolName;
 
   if (options.deleteIfHandleOutsideImage && Object(_anyHandlesOutsideImage_js__WEBPACK_IMPORTED_MODULE_2__["default"])(evtDetail, annotation.handles)) {
     Object(_stateManagement_toolState_js__WEBPACK_IMPORTED_MODULE_3__["removeToolState"])(element, toolName, annotation);
@@ -8376,6 +8415,8 @@ function _moveEndHandler(toolName, annotation, handle, options, interactionType,
     Object(_util_clip_js__WEBPACK_IMPORTED_MODULE_5__["clipToBox"])(handle, evt.detail.image);
   } // If any handle is outside the image, delete the tool data
 
+
+  evt.detail.toolName = toolName;
 
   if (options.deleteIfHandleOutsideImage && Object(_anyHandlesOutsideImage_js__WEBPACK_IMPORTED_MODULE_2__["default"])(evt.detail, annotation.handles)) {
     Object(_stateManagement_toolState_js__WEBPACK_IMPORTED_MODULE_3__["removeToolState"])(element, toolName, annotation);
@@ -22377,12 +22418,12 @@ function (_BaseAnnotationTool) {
 
           Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContent, data.handles, textBoxAnchorPoints, color, lineWidth, 0, true); // 风险提示_第一行
 
-          if (data.CHISON_SONOAI) {
+          if (data.CHISON_SONOAI && data.CHISON_SONOAI_AREA_RISK_1) {
             Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk_1, data.handles, textBoxAnchorPoints, '#9CCEF9', lineWidth, 0, false, 15);
           } // 风险提示_第二行
 
 
-          if (data.CHISON_SONOAI) {
+          if (data.CHISON_SONOAI && data.CHISON_SONOAI_AREA_RISK_2) {
             Object(_drawing_index_js__WEBPACK_IMPORTED_MODULE_10__["drawLinkedTextBox"])(context, element, data.handles.textBox, textBoxContentRisk_2, data.handles, textBoxAnchorPoints, '#9CCEF9', lineWidth, 0, false, 35);
           }
         }
@@ -22579,7 +22620,7 @@ function _formatArea(area, hasPixelSpacing, _ref) {
       CHISON_SONOAI_AREA = _ref.CHISON_SONOAI_AREA;
   // This uses Char code 178 for a superscript 2
   var suffix = hasPixelSpacing ? " mm".concat(String.fromCharCode(178)) : " pixels".concat(String.fromCharCode(178));
-  return CHISON_SONOAI ? CHISON_SONOAI_AREA : "".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_12__["default"])(area.toFixed(2))).concat(suffix);
+  return CHISON_SONOAI && CHISON_SONOAI_AREA ? CHISON_SONOAI_AREA : "".concat(Object(_util_numbersWithCommas_js__WEBPACK_IMPORTED_MODULE_12__["default"])(area.toFixed(2))).concat(suffix);
 }
 /**
  * TODO: This is identical to EllipticalROI's same fn
